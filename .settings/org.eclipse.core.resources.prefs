@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+encoding//src/CreateCoordinateObject.py=shift_jis
+encoding//src/CreateMatrix.py=shift_jis
+encoding//src/mq_vector3d.py=sjis
+encoding//src/vector3d.py=sjis
+encoding//src/vector3d_test.py=sjis
