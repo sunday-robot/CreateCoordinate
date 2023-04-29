@@ -1,4 +1,3 @@
-# _oding:shift_jis
 # 選択されている3角形から、ローカル座標系を設定した新たなオブジェクトを生成する。
 # 一番長い辺に属さない頂点を原点とする。
 # 原点
@@ -19,16 +18,22 @@ def _toMQPoint(v):
 
 # 入力値(三角形の頂点座標のリスト)を取得する
 def _getInput():
+	# MQOドキュメントから、選択されている3角形の面(Face)を取得する。
+	# 三角形の面をinputFaceに、その三角形が属するオブジェクトをinputObjectにセットする。
 	doc = MQSystem.getDocument()
 	inputObject = None
 	inputFace = None
+	# MQOドキュメントの全オブジェクトを走査する(選択されているオブジェクトのリストを返すメソッドはMQOドキュメントにはない)
+	# 複数選択されている可能性があるので、選択されている三角形の面が見つかっても走査は中断しない
 	for oi in range(doc.numObject):
 		obj = doc.object[oi]
+		# ↓この判定は必要だったと思うがなぜなのかは忘れた…
 		if not obj:
 			continue
+		# オブジェクトの全ての面(Face)を走査する。
 		for fi in range(obj.numFace):
 			if not doc.isSelectFace(oi, fi):
-				continue  # このオブジェクトには一つも選択されている面がない
+				continue
 			face = obj.face[fi]
 			if face.numVertex != 3:
 				raise ValueError("三角形以外のものが選択されています。")
@@ -45,9 +50,11 @@ def _getInput():
 	v2 = inputObject.vertex[face.index[2]]
 
 	# 三角形の頂点の座標
-	p0 = _fromMQPoint(v0.getPos())  # getPos()は、ワールド座標系の座標値を返すらしい。
+	p0 = _fromMQPoint(v0.getPos())  # getPos()は、ワールド座標系の座標値を返すらしい。（ローカル座標を取得するにはローカル座標系情報を参照して自前で計算するしかない？)
 	p1 = _fromMQPoint(v1.getPos())
 	p2 = _fromMQPoint(v2.getPos())
+
+	# 面が片面であれば、その情報も欲しいが、APIを見てもそのような情報は得られなさそう。
 
 	return (p0, p1, p2)
 
@@ -94,4 +101,3 @@ def main():
 	MQSystem.getDocument().addObject(coordinateObject)
 	
 main()
-

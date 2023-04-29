@@ -1,4 +1,3 @@
-# coding:shift_jis
 # 選択されている3角形から、ローカル座標系を設定した新たなオブジェクトを生成する。
 # 一番長い辺に属さない頂点を原点とする。
 # 原点
@@ -19,25 +18,26 @@ def _getOriginAndVectors(p0, p1, p2):
     l01 = v01.length2()
 
     # 一番長い辺を調べ、原点 origin, 主軸(Z軸)a1、副軸(X軸)a2を特定する
-    if l01 > l12:
-        if l01 > l20:
-            # l01, (l20 | l12)
+    if l01 >= l12:
+        if l01 >= l20:
+            # p0～p1が一番長い(1位タイの場合も含む)
             origin = p2
             a1 = v12
             a2 = -v20
         else:
-            # l20, (l12 | l20)
+            # p2～p0が一番長い
             origin = p1
             a1 = v01
             a2 = -v12
     else:
-        if l12 > l20:
-            # l12, (l01 | l20)
+        # l12 > l01
+        if l12 >= l20:
+            # p1～p2が一番長い(p2～p0と1位タイの場合も含む)
             origin = p0
             a1 = v20
             a2 = -v01
         else:
-            # l20, l12, l01
+            # p2～p0が一番長い場合
             origin = p1
             a1 = v01
             a2 = -v12
@@ -51,12 +51,12 @@ def _calcAxes(a1, a2):
     return (ax, ay, az)
 
 def createMatrix(p0, p1, p2):
-    """
-    @return: (原点座標, X軸, Y軸, Z軸)
-    @param p0: 頂点座標1
-    @param p1: 頂点座標2
-    @param p2: 頂点座標3
-    """
+#    """
+#    @return: (原点座標, X軸, Y軸, Z軸)
+#    @param p0: 頂点座標1
+#    @param p1: 頂点座標2
+#    @param p2: 頂点座標3
+#    """
     (origin, a1, a2) = _getOriginAndVectors(p0, p1, p2)
     (ax, ay, az) = _calcAxes(a1, a2)
     return (origin, ax, ay, az)
